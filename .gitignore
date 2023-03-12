@@ -70,3 +70,6 @@ depcomp
 install-sh
 missing
 utils/config.h
+.deps/
+gtest/
+m4/

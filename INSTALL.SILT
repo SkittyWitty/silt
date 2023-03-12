@@ -9,7 +9,7 @@
 
 3) autoreconf -is
 
-4) ./configure LDFLAGS=-L${PWD}/gtest
+4) ./configure LDFLAGS=-L${PWD}/gtest/
 5) make -j4
 
 6-1) cd test/fawnds/
