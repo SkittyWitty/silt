@@ -165,8 +165,17 @@ namespace fawn {
         all_stores_.push_back(std::vector<FawnDS*>());
         all_stores_.push_back(std::vector<FawnDS*>());
 
-        all_stores_[0].push_back(alloc_store(0));
-        all_stores_[0].back()->Create();
+        // Do not delete database when opening
+        // Opening still does not work but at least it does not
+        // DELETE the entire database when calling `Open()`
+        for (size_t i = 0; i < 3; i++) {
+            FawnDS *store = alloc_store(i);
+            all_stores_.back().push_back(store);
+            FawnDS_Return status = store->Open();
+            if (status != OK) {
+                return status;
+            }
+        }
 
         back_store_size_ = 0;
 
