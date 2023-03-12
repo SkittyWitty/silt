@@ -6,7 +6,7 @@
 #include <vector>
 #include <cstdio>
 #include <sys/time.h>
-#include <tbb/atomic.h>
+#include <atomic>
 #include <tbb/queuing_mutex.h>
 
 using namespace fawn;
@@ -40,10 +40,10 @@ const size_t get_batch_size = 1000;
 size_t g_epoch;              // the epoch of all the test
 const size_t g_max_epoch = 2;
 
-tbb::atomic<size_t> g_current_store_i;
-tbb::atomic<size_t> g_current_get_i;
-tbb::atomic<size_t> g_merged_count;
-tbb::atomic<size_t> g_next_id;
+std::atomic<size_t> g_current_store_i;
+std::atomic<size_t> g_current_get_i;
+std::atomic<size_t> g_merged_count;
+std::atomic<size_t> g_next_id;
 
 void set_config_param(Configuration* main_config, Configuration* store_config)
 {

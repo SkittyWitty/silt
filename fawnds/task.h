@@ -56,7 +56,7 @@ namespace fawn {
         cpu_priority_t cpu_priority_;
         io_priority_t io_priority_;
         std::vector<Worker*> workers_;
-        //tbb::atomic<size_t> next_worker_;
+        //std::atomic<size_t> next_worker_;
         tbb::concurrent_bounded_queue<Task*> shared_queue_;
     };
 
