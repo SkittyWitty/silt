@@ -932,7 +932,7 @@ FawnDS_SF::WriteHeaderToFile() const {
     }
 
     if (ftruncate(fd, (off_t)length) == -1) {
-        fprintf(stderr, "Could not extend header file to %"PRIu64" bytes: \
+        fprintf(stderr, "Could not extend header file to %" PRIu64 " bytes: \
                 %s\n", length, strerror(errno));
     }
     lseek(fd, 0, SEEK_SET);
@@ -979,7 +979,7 @@ FawnDS_SF::ReadHeaderFromFile()
     uint64_t offset = 0;
     if ((uint64_t)pread64(fd, header_, length, offset) != length) {
         fprintf(stderr, "Could not read header for data at position \
-                    %"PRIu64": %s\n", offset, strerror(errno));
+                    %" PRIu64 ": %s\n", offset, strerror(errno));
         return ERROR;
     }
     return OK;

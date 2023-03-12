@@ -46,9 +46,9 @@ namespace fawn {
         uint64_t max_entries = HashUtil::FindNextHashSize(numObjects);
 
         DPRINTF(2, "CreateFawnDS table information:\n"
-               "\t hashtablesize: %"PRIu64"\n"
+               "\t hashtablesize: %" PRIu64 "\n"
                "\t num_entries: %i\n"
-               "\t Maximum number of entries: %"PRIu64"\n",
+               "\t Maximum number of entries: %" PRIu64 "\n",
                numObjects, 0, max_entries);
 
         hash_table_size_ = max_entries;
@@ -518,7 +518,7 @@ namespace fawn {
             }
 
         if (ftruncate(fd, (off_t)length) == -1) {
-            fprintf(stderr, "Could not extend file to %"PRIu64" bytes: %s\n",
+            fprintf(stderr, "Could not extend file to %" PRIu64 " bytes: %s\n",
                     length, strerror(errno));
         }
         lseek(fd, 0, SEEK_SET);

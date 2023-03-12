@@ -550,7 +550,7 @@ namespace fawn {
             }
 
         if (ftruncate(fd, (off_t)length) == -1) {
-            fprintf(stderr, "Could not extend file to %"PRIu64" bytes: %s\n",
+            fprintf(stderr, "Could not extend file to %" PRIu64 " bytes: %s\n",
                     length, strerror(errno));
         }
         lseek(fd, 0, SEEK_SET);
