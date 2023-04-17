@@ -119,7 +119,7 @@ vector<Cluster> MeanShift::cluster(const std::vector<Point> &points,
     return clusters;
 }
 
-void MeanShift::clustermax(vector<Cluster> &clusters){
+void MeanShift::clustermax(std::vector<Cluster> &clusters){
     double maxX;
     double minX;
     for (int i = 0; i < clusters.size(); i++) {

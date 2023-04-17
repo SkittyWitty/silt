@@ -20,7 +20,7 @@ public:
                                                 double kernel_bandwidth,
                                                 double EPSILON = 0.00001);
     std::vector<Cluster> cluster(const std::vector<Point> &, double);
-    void clustermax(vector<Cluster> &clusters);
+    void clustermax(std::vector<Cluster> &clusters);
 
 private:
     double (*kernel_func)(double,double);

@@ -51,8 +51,6 @@ namespace fawn {
         return sub_kv;
     }
 
-    
-
     FawnDS_Return SiltM::Create(vector<vector<double>>& points, int kernel_bandwidth)
     {
         // Clusters a list of keys
