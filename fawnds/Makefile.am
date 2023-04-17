@@ -29,7 +29,8 @@ noinst_HEADERS = 	DOMTreeErrorReporter.hpp	\
 			fawnds_sf_ordered_trie.h	\
 			fawnds_proxy.h			\
 			fawnds_monitor.h		\
-			bdb.h
+			bdb.h					\
+			silt_m.h
 
 libfawnds_la_SOURCES =  DOMTreeErrorReporter.cpp	\
 			DOMWriteErrorHandler.cpp	\
@@ -52,6 +53,7 @@ libfawnds_la_SOURCES =  DOMTreeErrorReporter.cpp	\
 			fawnds_sf_ordered_trie.cc			\
 			fawnds_proxy.cc			\
 			fawnds_monitor.cc			\
+			silt_m.cc			\
 			bdb.cc				\
 			cindex/bit_access.cpp			\
 			cindex/bit_vector.cpp			\

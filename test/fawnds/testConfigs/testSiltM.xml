@@ -1,0 +1,6 @@
+<fawnds>
+	<type>monitor</type>
+	<type>siltm</type>
+	<underlying-kv-store>./testConfigs/testCombiWithSiltM.xml</underlying-kv-store>
+
+</fawnds>

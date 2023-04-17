@@ -1,5 +1,5 @@
 #hashdb_test code
-noinst_PROGRAMS = testFawnDS testIterator testTrie testCuckoo testCombi testByYCSBWorkload benchCuckoo benchSemiRandomWrite benchStores preprocessTrace
+noinst_PROGRAMS = testFawnDS testIterator testTrie testCuckoo testCombi testSiltM testByYCSBWorkload benchCuckoo benchSemiRandomWrite benchStores preprocessTrace
 testFawnDS_SOURCES = testFawnDS.cc
 testFawnDS_CPPFLAGS = 				\
 	-I$(top_srcdir)/utils 			\
@@ -59,6 +59,18 @@ testCombi_LDADD = 				\
 	$(top_builddir)/fawnds/libfawnds.la 	\
 	$(top_builddir)/utils/libfawnkvutils.la \
 	$(THRIFT_LIBS)
+
+testSiltM_SOURCES = testSiltM.cc
+testSiltM_CPPFLAGS = 			\
+	-I$(top_srcdir)/utils 			\
+	-I$(top_srcdir)/fawnds			\
+	-I$(top_builddir)/fawnds		\
+	-I$(top_builddir)/fawnds/gen-cpp
+
+testSiltM_LDADD = 				\
+	$(top_builddir)/fawnds/libfawnds.la 	\
+	$(top_builddir)/utils/libfawnkvutils.la \
+	$(THRIFT_LIBS)	
 
 
 testByYCSBWorkload_SOURCES= testByYCSBWorkload.cc

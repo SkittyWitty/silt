@@ -42,15 +42,6 @@ free_kv(kv_array_type& arr)
     arr.clear();
 }
 
-/*
-static void
-print_hex(const char* s, int len)
-{
-    for (int i = 0; i < len; i++)
-        printf("%02x", (unsigned char)s[i]);
-}
-*/
-
 namespace fawn
 {
 	static std::string conf_file = "testConfigs/testCombi.xml";

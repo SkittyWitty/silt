@@ -12,6 +12,7 @@
 #include "sorter.h"
 #include "fawnds_proxy.h"
 #include "fawnds_monitor.h"
+#include "silt_m.h"
 #include "bdb.h"
 #include "debug.h"
 
@@ -52,6 +53,8 @@ namespace fawn {
             result = new FawnDS_Proxy();
         else if (type == "monitor")
             result = new FawnDS_Monitor();
+        else if (type == "silt_m")
+            result = new SiltM();
 #ifdef HAVE_LIBDB
         else if (type == "bdb")
             result = new BDB();

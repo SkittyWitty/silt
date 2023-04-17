@@ -81,3 +81,7 @@ stamp-h1
 config.*
 libtool
 ltmain.sh
+front_datastore_*
+front_file_header_*
+front_hashtable_*
+back_datastore_*
