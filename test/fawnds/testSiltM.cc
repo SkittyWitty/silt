@@ -170,6 +170,36 @@ namespace fawn
 		free_kv(arr_);
     }
 
+    TEST_F(FawnDS_SiltM_Test, TestSimpleSortedInsertRetrieveSome) {
+		// Small key-value storage
+        generate_random_kv(arr_, key_len_sizes_[0], data_len_, 100);
+
+        for (size_t i = 0; i < 100; i++)
+            EXPECT_EQ(OK, siltm_->Put(arr_[i].key, arr_[i].data));
+
+        for (size_t i = 0; i < 100; i++)
+        {
+            EXPECT_EQ(OK, siltm_->Get(arr_[i].key, ret_data_));
+            EXPECT_EQ(data_len_, ret_data_.size());
+            EXPECT_EQ(0, memcmp(arr_[i].data.data(), ret_data_.data(), data_len_));
+        }
+
+        // Large key-value storage
+        generate_random_kv(arr_, key_len_sizes_[1], data_len_, 100);
+
+        for (size_t i = 0; i < 100; i++)
+            EXPECT_EQ(OK, siltm_->Put(arr_[i].key, arr_[i].data));
+
+        for (size_t i = 0; i < 100; i++)
+        {
+            EXPECT_EQ(OK, siltm_->Get(arr_[i].key, ret_data_));
+            EXPECT_EQ(data_len_, ret_data_.size());
+            EXPECT_EQ(0, memcmp(arr_[i].data.data(), ret_data_.data(), data_len_));
+        }
+
+		free_kv(arr_);
+    }
+
 }  // namespace fawn
 
 int main(int argc, char** argv) {
