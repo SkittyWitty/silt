@@ -8,7 +8,7 @@ ClusteringAlgorithm* AlgoFactory::New(std::string algoName)
 {
     ClusteringAlgorithm* sortAlgo = NULL;
 
-    if (algoName == "Median")
+    if (algoName == "median")
          sortAlgo = new Median();
     else
         return nullptr;

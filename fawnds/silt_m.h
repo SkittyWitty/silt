@@ -25,14 +25,12 @@ namespace fawn {
         FawnDS_Return Put(const ConstValue& key, const ConstValue& data);
         FawnDS_Return Get(const ConstValue& key, Value& data, size_t offset = 0, size_t len = -1) const;
         FawnDS_Return Status(const FawnDS_StatusType& type, Value& status) const;
-
+        std::vector<size_t> GetKeyLengths();
     private:
-        FawnDS* createSubKeyValueStore(size_t key_len, size_t size);
+        FawnDS* createSubKeyValueStore(size_t key_len, size_t size, int store_id);
         void PopulateStoreMapping(FawnDS* datastore, size_t start, size_t end);
         std::unordered_map<size_t, FawnDS*> dataStoreMap;
-        //std::vector<size_t> storeSizes;
-        int numberOfStores = 0;
-        //ClusteringAlgorithm sortingAlgo_;
+        std::vector<size_t> storeSizes;
     };
 } // namespace fawn
 

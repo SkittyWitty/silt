@@ -2,5 +2,5 @@
 	<type>siltm</type>
 	<underlying-kv-store>/home/min-slice/silt/test/fawnds/testConfigs/testCombiWithSiltM.xml</underlying-kv-store>
 	<data-len>10</data-len>
-	<sorting-algo>median</sorting-algo>
+	<cluster-algo>median</cluster-algo>
 </fawnds>

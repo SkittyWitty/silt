@@ -14,7 +14,7 @@
 
 namespace fawn {
 
-    FawnDS* SiltM::createSubKeyValueStore(size_t key_len, size_t size)
+    FawnDS* SiltM::createSubKeyValueStore(size_t key_len, size_t size, int store_id)
     {
         // Get the configuration file for the underlying stores
         std::string underlying_kv_store_ = config_->GetStringValue("child::underlying-kv-store").c_str();
@@ -32,8 +32,7 @@ namespace fawn {
 
         if (sub_kv_config->CreateNodeAndAppend("id", ".") != 0)
             assert(false);
-        numberOfStores = numberOfStores + 1;
-        snprintf(buf, sizeof(buf), "%d", numberOfStores);
+        snprintf(buf, sizeof(buf), "%d", store_id);
         if (sub_kv_config->SetStringValue("id", buf) != 0)
             assert(false);
 
@@ -58,48 +57,30 @@ namespace fawn {
         return sub_kv;
     }
 
-    // FawnDS_Return SiltM::MeanshiftCreate(vector<vector<double>>& points)
-    // {
-    //     // Clusters a list of keys
-    //     //MeanShift *meanShift = new MeanShift();
-    //     //vector<Cluster> clusters = meanShift->cluster(points, 2.0);
-
-    //     int clusters[] = {8, 4};
-    //     int numberOfClusters = sizeof(clusters) / sizeof(int);
-
-    //     // Traverse the list of clusters. 
-    //     for(int i = 0; i < numberOfClusters; i++) {
-    //         // Get the largest value in that cluster
-    //         // int max_key_len = clusters[i].maxX;
-    //         // int min_key_len = clusters[i].minX;
-    //         int max_key_len = clusters[i];
-    //         int min_key_len = clusters[i];
-
-    //         // Create a store based on the max key value
-    //         FawnDS* store = createSubKeyValueStore(max_key_len, sizeof(clusters[i]) * 2);
-
-    //         PopulateStoreMapping(store, min_key_len, max_key_len);
-    //     }
-    // }
-
     FawnDS_Return SiltM::Create(vector<size_t>& key_lens)
     {
         // Clusters a list of keys
-        std::string algotype = config_->GetStringValue("child::sorting-algo").c_str();
-        ClusteringAlgorithm *sortAlgo = AlgoFactory::New(algotype);
-        sortAlgo->CalculateStores(key_lens);
-        std::vector<StoreRange> storeRanges = sortAlgo->GetStoreRanges();
+        std::string algotype = config_->GetStringValue("child::cluster-algo");
+        ClusteringAlgorithm *clusterAlgo = AlgoFactory::New(algotype);
+        clusterAlgo->CalculateStores(key_lens);
+        std::vector<StoreRange> storeRanges = clusterAlgo->GetStoreRanges();
 
         for(int i = 0; i < storeRanges.size(); i++) {
             StoreRange currentRange = storeRanges[i];
             size_t min_key_len = currentRange.start;
             size_t max_key_len = currentRange.end;
 
+            size_t key_value_store_size = 1000000; // default value for now
+            int store_id = i+1;
+
             // Create a store based on the max key value
-            FawnDS* store = createSubKeyValueStore(max_key_len, max_key_len * 2);
+            FawnDS* store = createSubKeyValueStore(max_key_len, key_value_store_size, store_id);
+            storeSizes.push_back(max_key_len);
 
             PopulateStoreMapping(store, min_key_len, max_key_len);
         }
+
+        delete clusterAlgo;
     }
 
     void SiltM::PopulateStoreMapping(FawnDS* dataStore, size_t start, size_t end)
@@ -112,6 +93,11 @@ namespace fawn {
     FawnDS_Return SiltM::Status(const FawnDS_StatusType& type, Value& status) const
     {
         
+    }
+
+    std::vector<size_t> SiltM::GetKeyLengths()
+    {
+        return std::vector<size_t>(storeSizes);
     }
 
     FawnDS_Return SiltM::Put(const ConstValue& key, const ConstValue& data)

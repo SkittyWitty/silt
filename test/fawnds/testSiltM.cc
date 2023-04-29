@@ -108,21 +108,17 @@ namespace fawn
             std::string underlying_kv_store_ = config->GetStringValue("child::underlying-kv-store").c_str();
             std::cout << "Underlying Key-Value Store Config:" << underlying_kv_store_ << std::endl;
             
-            siltm_ = new SiltM();
-            siltm_->SetConfig(config);
-
             data_len_ = atoi(config->GetStringValue("child::data-len").c_str());
             assert(data_len_ != 0);
 
-            vector<vector<double>> points = load_points("/home/min-slice/silt/test/fawnds/testMultiKeyPoints/basic.csv");
-            print_points(points);
-            generate_mixed_sized_kv(arr_, points, data_len_);
-            min_key_size_ = 4;
-            max_key_size_ = 8;
+            // Initialize the key-value store
+            siltm_ = new SiltM();
+            siltm_->SetConfig(config);
 
-            //vector<size_t> points = {10,1,2,3,5};
-
-			//siltm_->Create(points);
+            // The key_lens that will be referenced to create stores
+            vector<size_t> key_lens {1,2,3,5,20,30,40};
+			siltm_->Create(key_lens);
+            key_len_sizes_ = siltm_->GetKeyLengths();
 
 			ret_data_.resize(0);
         }
@@ -135,8 +131,7 @@ namespace fawn
 
         // Objects declared here can be used by all tests in the test case for HashDB.
 
-        size_t min_key_size_;
-        size_t max_key_size_;
+        vector<size_t> key_len_sizes_; //ordered
         size_t data_len_;
         size_t size_;
 
@@ -148,6 +143,7 @@ namespace fawn
     };
 
     TEST_F(FawnDS_SiltM_Test, TestSimpleInsertRetrieve1) {
+        generate_random_kv(arr_, key_len_sizes_[0], data_len_, 1, true);
         EXPECT_EQ(OK, siltm_->Put(arr_[0].key, arr_[0].data));
 
         EXPECT_EQ(OK, siltm_->Get(arr_[0].key, ret_data_));
@@ -158,17 +154,14 @@ namespace fawn
     }
 
     TEST_F(FawnDS_SiltM_Test, TestSimpleInsertRetrieve2) {
-		generate_random_kv(arr_, min_key_size_, data_len_, 1, true);
-        printf("Inserting key %s\n", arr_[0].key.data());
+		generate_random_kv(arr_, key_len_sizes_[0], data_len_, 1, true);
 
         EXPECT_EQ(OK, siltm_->Put(arr_[0].key, arr_[0].data));
         EXPECT_EQ(OK, siltm_->Get(arr_[0].key, ret_data_));
         EXPECT_EQ(data_len_, ret_data_.size());
         EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
 
-		generate_random_kv(arr_, max_key_size_, data_len_, 1, true);
-        printf("Inserting key %s\n", arr_[0].key.data());
-        std::cout << "Inserting key: " << arr_[0].key.data() << std::endl;
+		generate_random_kv(arr_, key_len_sizes_[1], data_len_, 1, true);
         EXPECT_EQ(OK, siltm_->Put(arr_[0].key, arr_[0].data));
         EXPECT_EQ(OK, siltm_->Get(arr_[0].key, ret_data_));
         EXPECT_EQ(data_len_, ret_data_.size());
