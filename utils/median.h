@@ -2,9 +2,9 @@
 #define _MEDIAN_H_
 
 #include <vector>
-#include "sortingalgorithm.h"
+#include "clusteringalgorithm.h"
 
-class Median : public SortingAlgorithm {
+class Median : public ClusteringAlgorithm {
 public:
     void CalculateStores(std::vector<size_t>& values);
 

@@ -1,12 +1,12 @@
 #ifndef _ALGO_FACTORY_H_
 #define _ALGO_FACTORY_H_
 
-#include "sortingalgorithm.h"
+#include "clusteringalgorithm.h"
 #include <string>
 
 class AlgoFactory {
     public:
-        static SortingAlgorithm* New(std::string algo_name);
+        static ClusteringAlgorithm* New(std::string algo_name);
 };
 
 

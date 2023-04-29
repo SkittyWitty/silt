@@ -32,7 +32,7 @@ namespace fawn {
         std::unordered_map<size_t, FawnDS*> dataStoreMap;
         //std::vector<size_t> storeSizes;
         int numberOfStores = 0;
-        //SortingAlgorithm sortingAlgo_;
+        //ClusteringAlgorithm sortingAlgo_;
     };
 } // namespace fawn
 

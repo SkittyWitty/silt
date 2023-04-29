@@ -8,10 +8,10 @@ struct StoreRange {
     size_t end;
 };
 
-class SortingAlgorithm {
+class ClusteringAlgorithm {
 public:
-    SortingAlgorithm();
-    virtual ~SortingAlgorithm() {};
+    ClusteringAlgorithm();
+    virtual ~ClusteringAlgorithm() {};
     virtual void CalculateStores(std::vector<size_t>& values);
     const std::vector<StoreRange>& GetStoreRanges();
 

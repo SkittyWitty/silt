@@ -86,7 +86,7 @@ namespace fawn {
     {
         // Clusters a list of keys
         std::string algotype = config_->GetStringValue("child::sorting-algo").c_str();
-        SortingAlgorithm *sortAlgo = AlgoFactory::New(algotype);
+        ClusteringAlgorithm *sortAlgo = AlgoFactory::New(algotype);
         sortAlgo->CalculateStores(key_lens);
         std::vector<StoreRange> storeRanges = sortAlgo->GetStoreRanges();
 

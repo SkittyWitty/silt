@@ -4,9 +4,9 @@
 #include "meanshift.h"
 #include "median.h"
 
-SortingAlgorithm* AlgoFactory::New(std::string algoName)
+ClusteringAlgorithm* AlgoFactory::New(std::string algoName)
 {
-    SortingAlgorithm* sortAlgo = NULL;
+    ClusteringAlgorithm* sortAlgo = NULL;
 
     if (algoName == "Median")
          sortAlgo = new Median();
