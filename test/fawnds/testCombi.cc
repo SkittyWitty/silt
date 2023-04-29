@@ -94,6 +94,12 @@ namespace fawn
         EXPECT_EQ(data_len_, ret_data_.size());
         EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
 
+		{
+			Value status;
+			if (fawnds_->Status(MEMORY_USE, status) == OK)
+				fprintf(stderr, "Memory use: %s\n", status.str().c_str());
+		}
+
 		free_kv(arr_);
     }
 

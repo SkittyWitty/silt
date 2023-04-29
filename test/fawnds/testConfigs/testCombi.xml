@@ -1,14 +1,6 @@
 <fawnds>
 	<type>monitor</type>
 
-	<!--
-	<type>partition</type>
-	<id>0</id>
-	<skip-bits></skip-bits>
-	<partitions>4</partitions>
-	<store>
-	-->
-
 	<type>combi</type>
 	<id>0</id>
 
@@ -74,7 +66,6 @@
 		<size></size>
 		<bucket-size>128</bucket-size>
 		<skip-bits>0</skip-bits>
-		<!--<skip-bits>2</skip-bits>-->
 
 		<datastore>
 			<type>file</type>
@@ -84,8 +75,4 @@
 			<file>./testFiles/back_datastore</file>
 		</datastore>
 	</store2>
-
-	<!--
-	</store>
-	-->
 </fawnds>

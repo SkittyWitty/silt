@@ -91,7 +91,6 @@ std::vector<MeanShift::Point> MeanShift::meanshift(const std::vector<Point> &poi
 }
 
 
-
 vector<Cluster> MeanShift::cluster(const std::vector<Point> &points,
     const std::vector<Point> &shifted_points)
 {

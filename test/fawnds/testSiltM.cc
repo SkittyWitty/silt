@@ -13,8 +13,8 @@ struct kv_pair {
 };
 typedef std::vector<kv_pair> kv_array_type;
 
-std::vector<std::vector<double>> load_key_size_densities(const char *filename) {
-    std::vector<std::vector<double>> KeySizeDensities;
+vector<vector<double>> load_points(const char *filename) {
+    vector<vector<double> > points;
     FILE *fp = fopen(filename, "r");
     char line[50];
     while (fgets(line, sizeof(line), fp) != NULL) {
@@ -26,30 +26,41 @@ std::vector<std::vector<double>> load_key_size_densities(const char *filename) {
                 *y_str++ = 0;
                 x = atof(x_str);
                 y = atof(y_str);
-                std::vector<double> point;
+                vector<double> point;
                 point.push_back(x);
                 point.push_back(y);
-                KeySizeDensities.push_back(point);
+                points.push_back(point);
                 break;
             }
             ++y_str;
         }
     }
     fclose(fp);
-    return KeySizeDensities;
+    return points;
 }
 
-static void generate_random_kv(kv_array_type& out_arr, size_t key_len, size_t data_len, size_t size, unsigned int seed = 0)
+void print_points(vector<vector<double>> points){
+    for(int i=0; i<points.size(); i++){
+        for(int dim = 0; dim<points[i].size(); dim++) {
+            printf("%f ", points[i][dim]);
+        }
+        printf("\n");
+    }
+}
+
+static void generate_random_kv(kv_array_type& out_arr, size_t key_len, size_t data_len, size_t size, bool clear = false, unsigned int seed = 0)
 {
 	size_t kv_len = key_len + data_len;
+    
+    if (clear == true){
+        out_arr.clear();
+    }
 
     srand(seed);
     char* buf = new char[kv_len * size];
     for (size_t i = 0; i < kv_len * size; i++)
         buf[i] = rand() & 0xff;
-        //buf[i] = (rand() % ('Z' - 'A')) + 'A';
 
-    out_arr.clear();
     for (size_t i = 0; i < size; i++) {
 		kv_pair kv;
 		kv.key = fawn::RefValue(buf + i * kv_len, key_len);
@@ -58,17 +69,19 @@ static void generate_random_kv(kv_array_type& out_arr, size_t key_len, size_t da
 	}
 }
 
-
-static void generate_mixed_sized_kv(const char *filename, kv_array_type& out_arr, size_t key_len, size_t data_len, size_t size, unsigned int seed = 0){
+static void generate_mixed_sized_kv(kv_array_type& out_arr, vector<vector<double>>& points, size_t data_len){
     // Consists of points x,y
     // x = the key-lengths
     // y = the number of keys
-    std::vector<std::vector<double>> KeySizeDensities;
+    out_arr.clear();
 
-    
+    for (int i = 0; i < points.size(); i++){
+        vector<double>& cur_point = points.at(i);
+        size_t key_len = cur_point.at(0);
+        size_t size = cur_point.at(1);
+        generate_random_kv(out_arr, key_len, data_len, size);
+    }
 }
-
-
 
 static void free_kv(kv_array_type& arr)
 {
@@ -82,7 +95,8 @@ static void free_kv(kv_array_type& arr)
 
 namespace fawn
 {
-	static std::string conf_file = "testConfigs/testSiltM.xml";
+	static std::string conf_file = "/home/min-slice/silt/test/fawnds/testConfigs/testSiltM.xml";
+    static std::string points_file = "/home/min-slice/silt/test/fawnds/testMultiKeyPoints/basic.csv";
 
     class FawnDS_SiltM_Test : public testing::Test
     {
@@ -96,25 +110,21 @@ namespace fawn
             
             siltm_ = new SiltM();
             siltm_->SetConfig(config);
-			//siltm_->Create();
 
-			// key_len_ = atoi(config->GetStringValue("child::key-len").c_str());
-			// data_len_ = atoi(config->GetStringValue("child::data-len").c_str());
-			// size_ = atoi(config->GetStringValue("child::size").c_str());
-			// assert(key_len_ != 0);
-			// assert(data_len_ != 0);
-			// assert(size_ != 0);
+            data_len_ = atoi(config->GetStringValue("child::data-len").c_str());
+            assert(data_len_ != 0);
 
-            // fawnds_ = FawnDS_Factory::New(config);
-			// fawnds_->Create();
+            vector<vector<double>> points = load_points("/home/min-slice/silt/test/fawnds/testMultiKeyPoints/basic.csv");
+            print_points(points);
+            generate_mixed_sized_kv(arr_, points, data_len_);
+            min_key_size_ = 4;
+            max_key_size_ = 8;
 
-			// ret_data_.resize(0);
+            //vector<size_t> points = {10,1,2,3,5};
 
-            std::vector<int> numbers = {1, 5, 3, 7, 2};
+			//siltm_->Create(points);
 
-            // Find the largest number
-
-
+			ret_data_.resize(0);
         }
 
         // Code in the TearDown() method will be called immediately after each test
@@ -125,7 +135,8 @@ namespace fawn
 
         // Objects declared here can be used by all tests in the test case for HashDB.
 
-        size_t key_len_;
+        size_t min_key_size_;
+        size_t max_key_size_;
         size_t data_len_;
         size_t size_;
 
@@ -136,29 +147,36 @@ namespace fawn
 		Value ret_data_;
     };
 
-    TEST_F(FawnDS_SiltM_Test, Meh) {
-		// generate_random_kv(arr_, key_len_, data_len_, 1);
-
-        // EXPECT_EQ(OK, fawnds_->Put(arr_[0].key, arr_[0].data));
-
-        // EXPECT_EQ(OK, fawnds_->Get(arr_[0].key, ret_data_));
-        // EXPECT_EQ(data_len_, ret_data_.size());
-        // EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
-
-		// free_kv(arr_);
-    }
-
     TEST_F(FawnDS_SiltM_Test, TestSimpleInsertRetrieve1) {
-		// generate_random_kv(arr_, key_len_, data_len_, 1);
+        EXPECT_EQ(OK, siltm_->Put(arr_[0].key, arr_[0].data));
 
-        // EXPECT_EQ(OK, fawnds_->Put(arr_[0].key, arr_[0].data));
+        EXPECT_EQ(OK, siltm_->Get(arr_[0].key, ret_data_));
+        EXPECT_EQ(data_len_, ret_data_.size());
+        EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
 
-        // EXPECT_EQ(OK, fawnds_->Get(arr_[0].key, ret_data_));
-        // EXPECT_EQ(data_len_, ret_data_.size());
-        // EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
-
-		// free_kv(arr_);
+		free_kv(arr_);
     }
+
+    TEST_F(FawnDS_SiltM_Test, TestSimpleInsertRetrieve2) {
+		generate_random_kv(arr_, min_key_size_, data_len_, 1, true);
+        printf("Inserting key %s\n", arr_[0].key.data());
+
+        EXPECT_EQ(OK, siltm_->Put(arr_[0].key, arr_[0].data));
+        EXPECT_EQ(OK, siltm_->Get(arr_[0].key, ret_data_));
+        EXPECT_EQ(data_len_, ret_data_.size());
+        EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
+
+		generate_random_kv(arr_, max_key_size_, data_len_, 1, true);
+        printf("Inserting key %s\n", arr_[0].key.data());
+        std::cout << "Inserting key: " << arr_[0].key.data() << std::endl;
+        EXPECT_EQ(OK, siltm_->Put(arr_[0].key, arr_[0].data));
+        EXPECT_EQ(OK, siltm_->Get(arr_[0].key, ret_data_));
+        EXPECT_EQ(data_len_, ret_data_.size());
+        EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
+
+		free_kv(arr_);
+    }
+
 }  // namespace fawn
 
 int main(int argc, char** argv) {

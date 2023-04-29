@@ -7,6 +7,7 @@
 #include <cassert>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "basic_types.h"
 #include "fawnds_factory.h"
@@ -19,18 +20,19 @@ namespace fawn {
 
     class SiltM : public FawnDS {
     public:
-        SiltM();
-
-        FawnDS_Return Create(vector<vector<double>>& points, int kernel_bandwidth);
-        virtual FawnDS_Return Status(const FawnDS_StatusType& type, Value& status) const;
-
-        virtual FawnDS_Return Put(const ConstValue& key, const ConstValue& data);
-        virtual FawnDS_Return Get(const ConstValue& key, Value& data, size_t offset = 0, size_t len = -1) const;
+        //FawnDS_Return MeanshiftCreate(vector<vector<double>>& points);
+        FawnDS_Return Create(vector<size_t>& key_lens);
+        FawnDS_Return Put(const ConstValue& key, const ConstValue& data);
+        FawnDS_Return Get(const ConstValue& key, Value& data, size_t offset = 0, size_t len = -1) const;
+        FawnDS_Return Status(const FawnDS_StatusType& type, Value& status) const;
 
     private:
         FawnDS* createSubKeyValueStore(size_t key_len, size_t size);
-        void PopulateStore(FawnDS* datastore, size_t start, size_t end);
+        void PopulateStoreMapping(FawnDS* datastore, size_t start, size_t end);
         std::unordered_map<size_t, FawnDS*> dataStoreMap;
+        //std::vector<size_t> storeSizes;
+        int numberOfStores = 0;
+        //SortingAlgorithm sortingAlgo_;
     };
 } // namespace fawn
 

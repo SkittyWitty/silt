@@ -1,6 +1,6 @@
 <fawnds>
-	<type>monitor</type>
 	<type>siltm</type>
-	<underlying-kv-store>./testConfigs/testCombiWithSiltM.xml</underlying-kv-store>
-
+	<underlying-kv-store>/home/min-slice/silt/test/fawnds/testConfigs/testCombiWithSiltM.xml</underlying-kv-store>
+	<data-len>10</data-len>
+	<sorting-algo>median</sorting-algo>
 </fawnds>

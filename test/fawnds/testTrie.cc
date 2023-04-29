@@ -146,6 +146,13 @@ namespace fawn
         EXPECT_EQ(OK, fawnds_->Get(arr_[0].key, ret_data_));
         EXPECT_EQ(data_len_, ret_data_.size());
         EXPECT_EQ(0, memcmp(arr_[0].data.data(), ret_data_.data(), data_len_));
+
+		{
+			Value status;
+			if (fawnds_->Status(MEMORY_USE, status) == OK)
+				fprintf(stderr, "Memory use: %s\n", status.str().c_str());
+		}
+
     }
 
     TEST_F(FawnDS_SF_Ordered_Trie_Test, TestSimpleInsertRetrieve2) {

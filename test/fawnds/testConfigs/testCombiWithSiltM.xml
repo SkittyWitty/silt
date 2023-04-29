@@ -1,10 +1,12 @@
 <fawnds>
 	<type>monitor</type>
 
-<type>combi</type>
+	<type>combi</type>
 	<!-- id, key-len and size will be added later-->
 
-	<data-len>100</data-len>
+	<data-len>10</data-len>
+	<size>1000000</size>
+
 
 	<store0>
 		<type>sf</type>
